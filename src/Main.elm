@@ -62,6 +62,10 @@ update msg model =
 -- Styles --
 
 
+applyIf : Bool -> List Style -> Style
+applyIf bool styles = Css.batch (if bool then styles else [])
+
+
 textStyles : Style
 textStyles =
     Css.batch
@@ -80,25 +84,21 @@ viewThumbnail selectedPokemon pokemon =
     let
         isSelected =
             selectedPokemon == pokemon.id
-
-        applySelected : Style -> Style -> Style
-        applySelected trueStyle falseStyle =
-            if isSelected then
-                trueStyle
-
-            else
-                falseStyle
+        
+        applyIfIsSelected = 
+            applyIf isSelected
     in
     button
         [ onClick (SelectPokemon pokemon.id)
         , css
-            [ backgroundColor (hex "#ffffff")
+            [ backgroundColor (hex "f03d37")
             , padding (rem 2)
             , boxShadow5 (px 0) (px 4) (px 6) (px -1) (rgba 0 0 0 0.06)
             , cursor pointer
             , borderWidth (px 0)
             , borderRadius (px 8)
-            , applySelected (backgroundColor (hex "fceb26")) (backgroundColor (hex "f03d37"))
+            , applyIfIsSelected 
+                [backgroundColor (hex "fceb26")]
             , focus
                 [ outlineColor (hex "eeeeee")
                 ]
@@ -112,7 +112,9 @@ viewThumbnail selectedPokemon pokemon =
         , p
             [ css
                 [ textStyles
-                , applySelected (color (hex "000000")) (color (hex "ffffff"))
+                , color (hex "ffffff")
+                , applyIfIsSelected
+                    [color (hex "000000")]
                 , fontSize (rem 2)
                 ]
             ]
