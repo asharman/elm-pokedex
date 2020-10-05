@@ -7,6 +7,61 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 
 
+main =
+    Browser.sandbox
+        { init = initialModel
+        , update = update
+        , view = view >> toUnstyled
+        }
+
+
+
+-- Model --
+
+
+type alias Pokemon =
+    { id : Int
+    , imageUrl : String
+    , name : String
+    }
+
+
+type alias Model =
+    { pokemon : List Pokemon
+    , selectedPokemon : Int
+    }
+
+
+initialModel : Model
+initialModel =
+    { pokemon =
+        [ { id = 1, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/2/21/001Bulbasaur.png/250px-001Bulbasaur.png", name = "Bulbasaur" }
+        , { id = 2, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/7/73/004Charmander.png/250px-004Charmander.png", name = "Charmander" }
+        , { id = 3, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/3/39/007Squirtle.png/250px-007Squirtle.png", name = "Squirtle" }
+        ]
+    , selectedPokemon = 1
+    }
+
+
+
+-- Update --
+
+
+type Msg
+    = SelectPokemon Int
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SelectPokemon id ->
+            { model | selectedPokemon = id }
+
+
+
+-- Styles --
+
+
 textStyles : Style
 textStyles =
     Css.batch
@@ -16,23 +71,8 @@ textStyles =
         ]
 
 
-view : Model -> Html Msg
-view model =
-    div []
-        [ h1
-            [ css
-                [ textStyles
-                ]
-            ]
-            [ text "Kanto Pokedex" ]
-        , div
-            [ css
-                [ displayFlex
-                , justifyContent spaceAround
-                ]
-            ]
-            (List.map (viewThumbnail model.selectedPokemon) model.pokemon)
-        ]
+
+-- Views --
 
 
 viewThumbnail : Int -> Pokemon -> Html Msg
@@ -80,44 +120,20 @@ viewThumbnail selectedPokemon pokemon =
         ]
 
 
-main =
-    Browser.sandbox
-        { init = initialModel
-        , update = update
-        , view = view >> toUnstyled
-        }
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        SelectPokemon id ->
-            { model | selectedPokemon = id }
-
-
-type Msg
-    = SelectPokemon Int
-
-
-type alias Pokemon =
-    { id : Int
-    , imageUrl : String
-    , name : String
-    }
-
-
-type alias Model =
-    { pokemon : List Pokemon
-    , selectedPokemon : Int
-    }
-
-
-initialModel : Model
-initialModel =
-    { pokemon =
-        [ { id = 1, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/2/21/001Bulbasaur.png/250px-001Bulbasaur.png", name = "Bulbasaur" }
-        , { id = 2, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/7/73/004Charmander.png/250px-004Charmander.png", name = "Charmander" }
-        , { id = 3, imageUrl = "https://cdn.bulbagarden.net/upload/thumb/3/39/007Squirtle.png/250px-007Squirtle.png", name = "Squirtle" }
+view : Model -> Html Msg
+view model =
+    div []
+        [ h1
+            [ css
+                [ textStyles
+                ]
+            ]
+            [ text "Kanto Pokedex" ]
+        , div
+            [ css
+                [ displayFlex
+                , justifyContent spaceAround
+                ]
+            ]
+            (List.map (viewThumbnail model.selectedPokemon) model.pokemon)
         ]
-    , selectedPokemon = 1
-    }
