@@ -63,7 +63,14 @@ update msg model =
 
 
 applyIf : Bool -> List Style -> Style
-applyIf bool styles = Css.batch (if bool then styles else [])
+applyIf bool styles =
+    Css.batch
+        (if bool then
+            styles
+
+         else
+            []
+        )
 
 
 textStyles : Style
@@ -84,8 +91,8 @@ viewThumbnail selectedPokemon pokemon =
     let
         isSelected =
             selectedPokemon == pokemon.id
-        
-        applyIfIsSelected = 
+
+        applyIfIsSelected =
             applyIf isSelected
     in
     button
@@ -97,11 +104,10 @@ viewThumbnail selectedPokemon pokemon =
             , cursor pointer
             , borderWidth (px 0)
             , borderRadius (px 8)
-            , applyIfIsSelected 
-                [backgroundColor (hex "fceb26")]
+            , applyIfIsSelected
+                [ backgroundColor (hex "fceb26") ]
             , focus
-                [ outlineColor (hex "eeeeee")
-                ]
+                [ outlineColor (hex "eeeeee") ]
             ]
         ]
         [ img
@@ -114,7 +120,7 @@ viewThumbnail selectedPokemon pokemon =
                 [ textStyles
                 , color (hex "ffffff")
                 , applyIfIsSelected
-                    [color (hex "000000")]
+                    [ color (hex "000000") ]
                 , fontSize (rem 2)
                 ]
             ]
